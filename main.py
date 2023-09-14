@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from typing import Annotated
+
+from fastapi import FastAPI, Path, Query
 import requests
 from pydantic import BaseModel
 
@@ -14,7 +16,7 @@ class Result(BaseModel):
 
 
 @app.get("/api/rates", response_model=Result)
-def rates(source: str = "USD", to: str = "RUB", value: float = 1):
+def rates(source: str = "USD", to: str = "RUB", value: Annotated[float, Query(title="asd", gt=0)] = 1):
     url = f'http://apilayer.net/api/live?access_key={API_KEY}&currencies={to}&source={source}&amount={value}'
     get_url = requests.get(url)
     result_json = get_url.json()
